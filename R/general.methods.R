@@ -18,7 +18,7 @@
 #'                        higher value of Cg will lead to  a smaller estimated support.
 #' @details \code{Sx, Sy}:   The method requires an estimator of the inverse covariance
 #'                           matrices, i.e. the precision matrices of X and Y. Unless provided by
-#'                           the user, estimated using \code{\link[clime]{clime}} method of Cai et al. (2011).
+#'                           the user, estimated using \code{\link[glasso]{glasso}} method. #of Cai et al. (2011).
 #'
 #' @param  x  A matrix with n rows and p columns;
 #'           corresponds to the first data matrix. 

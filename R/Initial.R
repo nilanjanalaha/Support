@@ -226,11 +226,11 @@
    # Sx and Sy
    if(missing(Sx)) 
      {x <- scale(x, center = FALSE)}
-   else   x <- crossprod(solve(expm::sqrtm(Sx)), x)
+   else   x <- crossprod(t(x), solve(expm::sqrtm(Sx)))
    
    if(missing(Sy)) 
    {y <- scale(y, center = FALSE)}
-   else  y <- crossprod(solve(expm::sqrtm(Sy)), y)
+   else  y <- crossprod(t(y), solve(expm::sqrtm(Sy)))
       
    
    #sparsity estimation
