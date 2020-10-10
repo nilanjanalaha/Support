@@ -70,7 +70,12 @@ to estimate the support of the first pair of canonical directions of X and Y.
                         will give a sparser estimator of the covariance matrix. The method is
                         less sensitive to c2 than it is to c1.
 
-
+\code{tau, nl}:   The cleaning step of the co-ordinate threshold
+                          uses the cut-off level
+                          \deqn{tau \frac{\log(2s)^{0.5+nl}}{s}.}
+                          Therefore, higher values of tau and nl result in
+                          a higher cut-off value, shrinking the estimated support.
+                          See Theorem 4 of Laha and Mukherjee (2020) for more details.
 }
 \examples{
 library(mvtnorm)
