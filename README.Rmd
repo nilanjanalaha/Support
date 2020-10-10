@@ -81,11 +81,15 @@ library(Support.CCA)
 temp <- c_support(x,y)$sup.x
 
 #Proportion of recovered support
-which(temp[1:5]==1)/5
+length(which(temp[1:5]==1))/5
+
+#recovered support
+which(temp==1)
 ```
 
-If we can provide some estimattors of the number of non-zero elements (sparsity) of 
-$\alpha$ and $\beta$, c_support will yield better estimates of the supports.
+We see a lot of elements which are not actually in the support, are estimated as part of the support.
+If we  put regularization on the number of non-zero elements (sparsity) of 
+$\alpha$ and $\beta$, c_support will yield better estimates of the supports. We will use 7 as an estimator of the sparsities, and pass it as the parameter sv=c(7, 7).
 
 ```{r better}
 Sx <- diag(rep(1,p))
@@ -94,9 +98,13 @@ temp <- c_support(x,y, sv=c(7, 7))$sup.x
 
 #Proportion of recovered support
 length(which(temp[1:5]==1))/5
+
+#estimated support
+which(temp==1)
 ```
 
-However, c_support has asymptotic garuantees only if  the covariance matrices are also provided.
+Thus, we see providing a regulrization parameter facilitates sparser support recovery.
+However, c_support has asymptotic garuantees only if  the covariance matrices are also provided. Still, as we see, c_support includes some elements, which are not in the support of $\alpha$, to be in the support.
 
 ```{r better yet}
 Sx <- diag(rep(1,p))
@@ -105,6 +113,52 @@ temp <- c_support(x,y, sv=c(7, 7), Sx=Sx, Sy=Sy)$sup.x
 
 #Proportion of recovered support
 length(which(temp[1:5]==1))/5
+
+#Esimated support
+which(temp==1)
+```
+
+The other method g_support also estimates the support of $\alpha$ and $\beta$. 
+```{r cars 3}
+temp <- g_support(x,y)$sup.x
+
+#Proportion of recovered support
+length(which(temp[1:5]==1))/5
+
+```
+
+We see that g_support recovers 80$\%$ of the data. Now we will see which elements are in estimated support.
+```{r cars 31}
+#Estimated support 
+which(temp==1)
+
+```
+
+We see that for this dataset, g_support does not include any element which is not in the support. 
+
+ One can pass a tuning parameter Cg to g_support. Cg  controls the length of the estimated support. If we increase Cg, then the estimated support shrinks. A smaller Cg results in an estimated support with more zeros. The default value is 0.50. See the documentation typing`` ?g.support" in the console for more details.
+  
+```{r cars 2}
+temp <- g_support(x,y, Cg=.4)$sup.x
+
+#Proportion of recovered support
+length(which(temp[1:5]==1))/5
+
+#Estimated support 
+which(temp==1)
+```
+
+We see that Cg=0.40 leads to exact support recovery of $\alpha$.
+One can also specify Sx and Sy in g_support, the variances of X and Y,  but it is not necessary.
+
+```{r cars 4}
+temp <- g_support(x,y, Cg=.4, Sx=Sx, Sy=Sy)$sup.x
+
+#Proportion of recovered support
+length(which(temp[1:5]==1))/5
+
+#Estimated support 
+which(temp==1)
 ```
 
 

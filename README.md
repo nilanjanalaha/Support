@@ -14,14 +14,7 @@ methods developed in Laha and Mukherjee (2020).
 
 ## Installation
 
-You can install the released version of Support.CCA from
-[CRAN](https://CRAN.R-project.org) with:
-
-``` r
-install.packages("Support.CCA")
-```
-
-And the development version from [GitHub](https://github.com/) with:
+Install from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
@@ -83,13 +76,19 @@ library(Support.CCA)
 temp <- c_support(x,y)$sup.x
 
 #Proportion of recovered support
-which(temp[1:5]==1)/5
-#> [1] 0.4
+length(which(temp[1:5]==1))/5
+#> [1] 0.6
+
+#recovered support
+which(temp==1)
+#>  [1]   1   2   4  29  43 131 159 164 206 232 247 348 388 491
 ```
 
-If we can provide some estimattors of the number of non-zero elements
-(sparsity) of \(\alpha\) and \(\beta\), c\_support will yield better
-estimates of the supports.
+We see a lot of elements which are not actually in the support, are
+estimated as part of the support. If we put regularization on the number
+of non-zero elements (sparsity) of \(\alpha\) and \(\beta\), c\_support
+will yield better estimates of the supports. We will use 7 as an
+estimator of the sparsities, and pass it as the parameter sv=c(7, 7).
 
 ``` r
 Sx <- diag(rep(1,p))
@@ -98,11 +97,18 @@ temp <- c_support(x,y, sv=c(7, 7))$sup.x
 
 #Proportion of recovered support
 length(which(temp[1:5]==1))/5
-#> [1] 0.4
+#> [1] 0.6
+
+#estimated support
+which(temp==1)
+#> [1]   1   2   4 131 164 206 247 388
 ```
 
-However, c\_support has asymptotic garuantees only if the covariance
-matrices are also provided.
+Thus, we see providing a regulrization parameter facilitates sparser
+support recovery. However, c\_support has asymptotic garuantees only if
+the covariance matrices are also provided. Still, as we see, c\_support
+includes some elements, which are not in the support of \(\alpha\), to
+be in the support.
 
 ``` r
 Sx <- diag(rep(1,p))
@@ -112,4 +118,65 @@ temp <- c_support(x,y, sv=c(7, 7), Sx=Sx, Sy=Sy)$sup.x
 #Proportion of recovered support
 length(which(temp[1:5]==1))/5
 #> [1] 0.6
+
+#Esimated support
+which(temp==1)
+#> [1]   1   2   4 131 164 206 247 388
+```
+
+The other method g\_support also estimates the support of \(\alpha\) and
+\(\beta\).
+
+``` r
+temp <- g_support(x,y)$sup.x
+
+#Proportion of recovered support
+length(which(temp[1:5]==1))/5
+#> [1] 0.8
+```
+
+We see that g\_support recovers 80\(\%\) of the data. Now we will see
+which elements are in estimated support.
+
+``` r
+#Estimated support 
+which(temp==1)
+#> [1] 1 2 4 5
+```
+
+We see that for this dataset, g\_support does not include any element
+which is not in the support.
+
+One can pass a tuning parameter Cg to g\_support. Cg controls the length
+of the estimated support. If we increase Cg, then the estimated support
+shrinks. A smaller Cg results in an estimated support with more zeros.
+The default value is 0.50. See the documentation typing\`\` ?g.support"
+in the console for more details.
+
+``` r
+temp <- g_support(x,y, Cg=.4)$sup.x
+
+#Proportion of recovered support
+length(which(temp[1:5]==1))/5
+#> [1] 1
+
+#Estimated support 
+which(temp==1)
+#> [1] 1 2 3 4 5
+```
+
+We see that Cg=0.40 leads to exact support recovery of \(\alpha\). One
+can also specify Sx and Sy in g\_support, the variances of X and Y, but
+it is not necessary.
+
+``` r
+temp <- g_support(x,y, Cg=.4, Sx=Sx, Sy=Sy)$sup.x
+
+#Proportion of recovered support
+length(which(temp[1:5]==1))/5
+#> [1] 1
+
+#Estimated support 
+which(temp==1)
+#> [1] 1 2 3 4 5
 ```

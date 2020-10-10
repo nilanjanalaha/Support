@@ -126,7 +126,8 @@
  #'                         these tuning parameters control the thresholding of
  #'                         the covariance matrix. Larger value of c1 and c2 will
  #'                         result in a higher value of thresholding parameter, which
- #'                         will give a sparser estimator of the covariance matrix.
+ #'                         will give a sparser estimator of the covariance matrix. The method is
+ #'                         less sensitive to c2 than it is to c1.
  #' @details \code{tau, nl}:   The cleaning step of the co-ordinate threshold
  #'                           uses the cut-off level
  #'                           \deqn{tau \frac{\log(2s)^(0.5+nl)}{s}.}
@@ -217,8 +218,8 @@
      y <-  scale(y, scale= FALSE)
    }
    #setting default values and standardizing the data
-   if(missing(c1)) c1 <- 1
-   if(missing(c2)) c2 <- 2*c1
+   if(missing(c1)) c1 <- 1.2
+   if(missing(c2)) c2 <- 100*c1
    if(missing(tau)) tau <- 1
    if(missing(nl)) nl <- 0.25
    

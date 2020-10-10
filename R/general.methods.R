@@ -92,7 +92,7 @@
    n <- nrow(x)
    
    #setting default values and standardizing the data
-   if(missing(Cg)) Cg <- 1
+   if(missing(Cg)) Cg <- 0.5
    if(missing(is.standardize)) is.standardize <- "FALSE"
   rho <- sqrt(log(p+q)/n)
      #CLIME

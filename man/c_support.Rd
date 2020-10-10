@@ -67,7 +67,8 @@ to estimate the support of the first pair of canonical directions of X and Y.
                         these tuning parameters control the thresholding of
                         the covariance matrix. Larger value of c1 and c2 will
                         result in a higher value of thresholding parameter, which
-                        will give a sparser estimator of the covariance matrix.
+                        will give a sparser estimator of the covariance matrix. The method is
+                        less sensitive to c2 than it is to c1.
 
 \code{tau, nl}:   The cleaning step of the co-ordinate threshold
                           uses the cut-off level
