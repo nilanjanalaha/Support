@@ -113,8 +113,3 @@ temp <- c_support(x,y, sv=c(7, 7), Sx=Sx, Sy=Sy)$sup.x
 length(which(temp[1:5]==1))/5
 #> [1] 0.6
 ```
-
-<img src="man/figures/README-pressure-1.png" width="100%" />
-
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub\!

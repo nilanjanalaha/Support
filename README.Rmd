@@ -23,13 +23,7 @@ knitr::opts_chunk$set(
 
 ## Installation
 
-You can install the released version of Support.CCA from [CRAN](https://CRAN.R-project.org) with:
-
-``` r
-install.packages("Support.CCA")
-```
-
-And the development version from [GitHub](https://github.com/) with:
+Install  from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
