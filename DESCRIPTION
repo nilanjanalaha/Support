@@ -1,0 +1,16 @@
+Package: Support.CCA
+Title: SUPPORT RECOVERY OF CANONICAL DIRECTIONS IN SPARSE CCA
+Version: 0.0.0.9000
+Authors@R: c(person("Nilanjana", "Laha", role = c("aut", "cre"), email="nlaha@hsph.harvard.edu"), person("Rajarshi", "Mukherjee", role="aut", email="ram521@mail.harvard.edu"))
+Description: Estimates the support of canonical direction vectors in case of
+             sparse canonical correlation analysis.
+License: MIT + file LICENSE
+Imports: mvtnorm,
+         MASS,
+         expm,
+         clime,
+         glasso,
+         glmnet 
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.1.0
