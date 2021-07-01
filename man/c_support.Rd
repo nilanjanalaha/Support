@@ -104,7 +104,7 @@ x <- Z[,1:p]
 y <- Z[,(p+1):(p+q)]
 
 #Support of alpha
-which(c_support(x=x, y=y, sv=c(10, 50))$sup.x==1)
+which(c_support(x=x, y=y, sv=c(10, 50), B=1)$sup.x==1)
 }
 \references{
 Laha, N., Mukherjee, R. (2021) 

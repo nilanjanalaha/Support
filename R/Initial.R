@@ -203,7 +203,7 @@
 #' y <- Z[,(p+1):(p+q)]
 #' 
 #' #Support of alpha
-#' which(c_support(x=x, y=y, sv=c(10, 50))$sup.x==1)
+#' which(c_support(x=x, y=y, sv=c(10, 50), B=1)$sup.x==1)
  #' @export
  c_support <- function(x, y, sv, c, B, tau, nl, Sx, Sy, is.standardize)
  {
@@ -270,7 +270,8 @@
        B.y <- norm(Sy, type="2")
        B <- max(B.x, B.y, 1)
     }
-    t <- givet(s, p+q, c, B)
+    l <- p+q
+    t <- givet(s, l, c, B)
     # calculating alpha, beta
     temp <- give_svd(sxy, t, n)
 
@@ -292,7 +293,7 @@
  givet <- function(s, p, C, B)
  {
     #Very hard regime
-    if (s^2>(p+q)*exp(1))
+    if (s^2>p*exp(1))
     return(0)
     #Easy regime
     if(C*s^2<2^{1/4}*p^{3/4})
