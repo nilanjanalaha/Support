@@ -31,7 +31,7 @@ g <- g + theme_bw() + theme(legend.position = "top", axis.title= element_text(si
                             legend.text=element_text(size= tl),
                             #strip.text.x=element_text(size= ts),
                             legend.title=element_text(size= tts))
-g <- g + ggtitle(paste("Simulation for ", what, " when tau","=",tau))
+g <- g + ggtitle(paste( what, " when t","=",tau))
 print(g)
 #dest3 <- paste(fp, "/Ramu/support/main_", where,"/",where,"plot.pdf", sep="")
 #ggsave(dest3, device="pdf", width = 9, height=3.5, units = "in")

@@ -138,18 +138,17 @@
  #' @param  x  A matrix with n rows and p columns;
  #'           corresponds to the first data matrix. 
  #' @param  y A matrix with n rows and q columns; corresponds to the second data matrix.
- #' @param c1  Optional. A positive constant corresponding to the threshold level in the
- #'           co-ordinate thresholding step to estimate the covariance matrix. If 
- #'           not provided, it is calculated from the data.
- #' @param c2  Optional. A positive constant greater than c1 corresponding to the threshold level in the
- #'           co-ordinate thresholding step to estimate the covariance matrix. If 
- #'           not provided, it is calculated from the data.
+ #' @param c  Optional. A positive constant corresponding to the threshold level in the
+ #'           co-ordinate thresholding step to estimate the covariance matrix. The default choice is
+ #'           one.
  #' @param sv  Optional. A vector giving the number of non-zero elements in the canonical
  #'            covariates \eqn{\alpha} and \eqn{\beta}, respectively. See 'details'
  #'            for more information.
  #' @param tau Optional. A positive tuning parameter corresponding to the cut-off level in the
  #'           cleaning step of the co-ordinate thresholding algorithm. If 
  #'           not provided, it is calculated from the data.
+ #' @param B   Optional. The condition number of \eqn{\Sigma}, the joint covariance 
+ #'            matrix of \eqn{x} and \eqn{y}.
  #' @param nl  Optional. A positive tuning parameter taking value in (0,0.50).  Corresponds to the cut-off level in the
  #'           cleaning step of the co-ordinate thresholding algorithm. If 
  #'           not provided, it is calculated from the data.
@@ -168,7 +167,7 @@
  #'             Conversely, if the i-th element is 1, it means i is in the support
  #'             of \eqn{\beta}.
  #' }
- #'@references Laha, N., Mukherjee, R. (2020) 
+ #'@references Laha, N., Mukherjee, R. (2021) 
  #'\emph{Support recovery of canonical correlation analysis}. Submitted
  #' @references Mai, Q., Zhang, X. (2019) \emph{An iterative penalized least squares 
  #' approach to sparse canonical correlation analysis}, Biometrics, 75, 734-744.
@@ -206,7 +205,7 @@
 #' #Support of alpha
 #' which(c_support(x=x, y=y, sv=c(10, 50))$sup.x==1)
  #' @export
- c_support <- function(x, y, sv, c1, c2,  tau, nl, Sx, Sy, is.standardize)
+ c_support <- function(x, y, sv, c, B, tau, nl, Sx, Sy, is.standardize)
  {
    p <- ncol(x)
    q <- ncol(y)
@@ -218,19 +217,26 @@
      y <-  scale(y, scale= FALSE)
    }
    #setting default values and standardizing the data
-   if(missing(c1)) c1 <- 1.2
-   if(missing(c2)) c2 <- 100*c1
+   if(missing(c)) c <- 1
    if(missing(tau)) tau <- 1
    if(missing(nl)) nl <- 0.25
    
    
    # Sx and Sy
    if(missing(Sx)) 
-     {x <- scale(x, center = FALSE)}
+   {  
+      #Coonsidering the sample variance to be the estimate of sigma_x
+      Sx <- var(x)
+      x <- scale(x, center = FALSE)
+      }
    else   x <- crossprod(t(x), solve(expm::sqrtm(Sx)))
    
    if(missing(Sy)) 
-   {y <- scale(y, center = FALSE)}
+   {
+      #Coonsidering the sample variance to be the estimate of sigma_x
+      Sy <- var(y)
+      y <- scale(y, center = FALSE)
+      }
    else  y <- crossprod(t(y), solve(expm::sqrtm(Sy)))
       
    
@@ -250,12 +256,21 @@
    }
    
    # Algorithm starts here
-   s <- max(sv)
+   s <- sv[1]+sv[2]
     syx <- cov(y, x)
     sxy <- t(syx)
     n <- nrow(x)
 
-    t <- givet(s, p, q, c1, c2)
+    #------Calculating t according to our Theorem 4---------
+    
+    #Calculating B
+    if(missing(B))
+    {
+       B.x <- norm(Sx, type="2")
+       B.y <- norm(Sy, type="2")
+       B <- max(B.x, B.y, 1)
+    }
+    t <- givet(s, p+q, c, B)
     # calculating alpha, beta
     temp <- give_svd(sxy, t, n)
 
@@ -273,17 +288,17 @@
  # We take C_1=1, C_2=3 in Theorem 3
  #------------ Output
  # A value of t
- givet <- function(s, p, q, C1, C2)
+ # The input for this p is actually p+q
+ givet <- function(s, p, C, B)
  {
-    hz <- log((p)/(4*s^2))
-    tstar <- C1*sqrt(hz)
-    if(hz>0)
-    {
-       if(tstar< sqrt(log(2*p))/2)
-        {  return(tstar)}
-       else { return(C2* tstar)}
-    }
+    #Very hard regime
+    if (s^2>(p+q)*exp(1))
     return(0)
+    #Easy regime
+    if(C*s^2<2^{1/4}*p^{3/4})
+      return(sqrt(50*B^4*log(p)))
+    #Hard regime
+   return(C*sqrt(1288*B^4*log(p/s^2))) 
  suppressWarnings()
  }
  

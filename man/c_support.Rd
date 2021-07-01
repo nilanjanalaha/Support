@@ -4,7 +4,7 @@
 \alias{c_support}
 \title{Support recovery of the first pair of canonical directions}
 \usage{
-c_support(x, y, sv, c1, c2, tau, nl, Sx, Sy, is.standardize)
+c_support(x, y, sv, c, B, tau, nl, Sx, Sy, is.standardize)
 }
 \arguments{
 \item{x}{A matrix with n rows and p columns;
@@ -16,13 +16,12 @@ corresponds to the first data matrix.}
 covariates \eqn{\alpha} and \eqn{\beta}, respectively. See 'details'
 for more information.}
 
-\item{c1}{Optional. A positive constant corresponding to the threshold level in the
-co-ordinate thresholding step to estimate the covariance matrix. If 
-not provided, it is calculated from the data.}
+\item{c}{Optional. A positive constant corresponding to the threshold level in the
+co-ordinate thresholding step to estimate the covariance matrix. The default choice is
+one.}
 
-\item{c2}{Optional. A positive constant greater than c1 corresponding to the threshold level in the
-co-ordinate thresholding step to estimate the covariance matrix. If 
-not provided, it is calculated from the data.}
+\item{B}{Optional. The condition number of \eqn{\Sigma}, the joint covariance 
+matrix of \eqn{x} and \eqn{y}.}
 
 \item{tau}{Optional. A positive tuning parameter corresponding to the cut-off level in the
 cleaning step of the co-ordinate thresholding algorithm. If 
@@ -108,7 +107,7 @@ y <- Z[,(p+1):(p+q)]
 which(c_support(x=x, y=y, sv=c(10, 50))$sup.x==1)
 }
 \references{
-Laha, N., Mukherjee, R. (2020) 
+Laha, N., Mukherjee, R. (2021) 
 \emph{Support recovery of canonical correlation analysis}. Submitted
 
 Mai, Q., Zhang, X. (2019) \emph{An iterative penalized least squares 
